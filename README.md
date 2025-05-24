@@ -381,8 +381,7 @@ pengembang untuk dengan cepat mendapatkan hasil awal dan mengevaluasi kinerja da
    lr_model = LogisticRegression(max_iter=1000)
    lr_model.fit(X_train, y_train)
    
-   models.loc['train_acc', 'LogisticRegression'] = lr_model.score(X_train, y_train)
-   models.loc['test_acc', 'LogisticRegression'] = lr_model.score(X_test, y_test)
+   y_pred_lr = lr_model.predict(X_test)
    ```
 **2. Random Forest**
 
@@ -397,8 +396,7 @@ diinterpretasikan dibandingkan model yang lebih sederhana, membutuhkan sumber da
    rf_model = RandomForestClassifier(random_state=42)
    rf_model.fit(X_train, y_train)
    
-   models.loc['train_acc', 'RandomForest'] = rf_model.score(X_train, y_train)
-   models.loc['test_acc', 'RandomForest'] = rf_model.score(X_test, y_test)
+   y_pred_rf = rf_model.predict(X_test)
    ```
 
 **3. Gradient Boosting Classifier**
@@ -412,31 +410,16 @@ tuning untuk mencapai kinerja optimal serta kurang dapat diinterpretasikan.
    - Parameter yang digunakan yaitu (random_state=42)
 
    ```python
-   from sklearn.ensemble import GradientBoostingClassifier
-   gb_model = GradientBoostingClassifier(random_state=42)
-   gb_model.fit(X_train, y_train)
-   
-   models.loc['train_acc', 'GradientBoosting'] = gb_model.score(X_train, y_train)
-   models.loc['test_acc', 'GradientBoosting'] = gb_model.score(X_test, y_test)
+  from sklearn.ensemble import GradientBoostingClassifier
+  gb_model = GradientBoostingClassifier(random_state=42)
+  gb_model.fit(X_train, y_train)
+  
+  y_pred_gb = gb_model.predict(X_test)
    ```
    
-   ```python 
-   models
-   ```
-
-   Output: 
-   
-   | Model              | Akurasi Data Latih | Akurasi Data Uji |
-   |--------------------|--------------------|------------------|
-   | Logistic Regression| 0.806064           | 0.743215         |
-   | Random Forest      | 0.999477           | 0.906054         |
-   | Gradient Boosting  | 0.969158           | 0.903967         |
-      
-   models dipanggil untuk menampilkan akurasi (baik pada data training maupun testing) dari ketiga model yang telah dilatih: Logistic Regression, Random Forest, dan Gradient Boosting. Terlihat bahwa Random Forest dan Gradient Boosting memiliki akurasi yang jauh lebih tinggi dibandingkan Logistic Regression, menunjukkan performa yang lebih baik dalam memprediksi tingkat nilai siswa. Random Forest sedikit mengungguli Gradient Boosting pada data testing.
-
 # Evaluation
 
-Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu: **Precision**, **Recall**, **F1-Score**, **Support** **Confusion Matrix**.
+Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa model klasifikasi yang telah dibangun, yaitu: **Precision**, **Recall**, dan **F1-Score**.
 
 - Precision mengukur berapa banyak prediksi positif yang benar dari semua prediksi positif.
 
@@ -456,27 +439,36 @@ Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa 
 
   ![443142312-007c3a65-1de9-4fd8-a672-35c3c90ae4ca](https://github.com/user-attachments/assets/6e5d9df1-a66e-46c8-8396-ce5bc256ce61)
 
-- Support merupakan Jumlah sampel aktual di setiap kelas (tidak ada formula khusus, hanya jumlah data per kelas).
-  
-- Confusion Matrix untuk menunjukkan jumlah prediksi benar dan salah berdasarkan label sebenarnya vs prediksi.
-  
-  Formula:
+Hasil evaluasi dari 3 model tersbut yaitu:
 
-  ![image](https://github.com/user-attachments/assets/eeec30e6-4395-4948-b866-f99be9e07bff)
+<pre>
+Logistic Regression:
+Accuracy: 0.74
+Precision (weighted avg): 0.71
+Recall (weighted avg): 0.74
+F1 Score (weighted avg): 0.72
 
-Berdasarkan hasil evaluasi dan metrik klasifikasi yang telah dilakukan, model yang paling optimal untuk digunakan dalam prediksi GradeClass adalah Random Forest. Hal ini didasarkan pada beberapa pertimbangan yaitu:
+Random Forest:
+Accuracy: 0.91
+Precision (weighted avg): 0.91
+Recall (weighted avg): 0.91
+F1 Score (weighted avg): 0.9
 
-1. Random Forest mencapai akurasi 91%, dibandingkan dengan:
-   - Gradient Boosting: 90%
-   - Logistic Regression: 74%
+Logistic Regression:
+Accuracy: 0.9
+Precision (weighted avg): 0.9
+Recall (weighted avg): 0.9
+F1 Score (weighted avg): 0.9
+</pre>
 
-2. Performa Stabil di Semua Kelas
-   - F1-score di semua kelas relatif tinggi dan seimbang, terutama kelas-kelas tengah seperti GradeClass 2 dan 3 yang jumlah datanya cukup banyak.
-   - Meskipun recall untuk GradeClass 0 tidak tinggi, precision-nya sangat baik (0.90), sehingga tetap andal untuk prediksi dengan konsekuensi penting (misalnya deteksi siswa risiko tinggi).
-  
-3. Hasil Macro & Weighted Average Bagus
-   - Macro avg F1-score: 0.82
-   - Weighted avg F1-score: 0.90
-   - Artinya model mampu memberikan hasil baik secara keseluruhan tanpa mengabaikan kelas minoritas.
+Berdasarkan hasil evaluasi dan metrik klasifikasi yang telah dilakukan, model yang paling optimal untuk digunakan dalam prediksi GradeClass adalah model Random Forest Anda (akibat akurasi 91%) secara langsung menjawab tujuan proyek dan berdampak positif pada business understanding.
 
+1. Model membantu mengidentifikasi siswa yang berpotensi berjuang (GradeClass rendah) atau berpotensi sukses (GradeClass tinggi) berdasarkan faktor-faktor dalam data, yang merupakan inti tantangan institusi pendidikan.
 
+2. Model berhasil membangun model klasifikasi multi-kelas yang akurat untuk memprediksi GradeClass, memungkinkan deteksi dini potensi performa akademik siswa
+
+3. Adapun dampak dari setiap solusi steatment yaitu:
+
+- Prediksi model memungkinkan guru fokus membimbing siswa berisiko, mengoptimalkan waktu mereka.
+- Prediksi memungkinkan sekolah membuat program dukungan (intervensi/pengayaan) yang sangat spesifik dan tertarget pada kelompok siswa yang memerlukannya.
+-  Informasi prediksi membantu orang tua lebih memahami potensi anak dan memberikan dukungan yang tepat di rumah.
