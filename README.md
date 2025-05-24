@@ -439,7 +439,7 @@ Pada tahap evaluasi, digunakan beberapa metrik evaluasi untuk mengukur performa 
 
   ![443142312-007c3a65-1de9-4fd8-a672-35c3c90ae4ca](https://github.com/user-attachments/assets/6e5d9df1-a66e-46c8-8396-ce5bc256ce61)
 
-Hasil evaluasi dari 3 model tersbut yaitu:
+Hasil evaluasi dari 3 model tersebut yaitu:
 
 <pre>
 Logistic Regression:
